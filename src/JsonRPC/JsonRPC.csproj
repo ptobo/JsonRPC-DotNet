@@ -7,9 +7,12 @@
     <Company />
     <PackageProjectUrl>https://github.com/ptobo/JsonRPC-DotNet/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ptobo/JsonRPC-DotNet.git</RepositoryUrl>
-    <Description>JsonRPC Class Library for supporting Json-RPC APIs</Description>
-    <PackageLicenseUrl>https://github.com/ptobo/JsonRPC-DotNet/master/LICENSE.md</PackageLicenseUrl>
+    <Description>Yet another JsonRPC Class Library for supporting Json-RPC APIs</Description>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/ptobo/JsonRPC-DotNet/master/LICENSE.md</PackageLicenseUrl>
     <Copyright>Copyright (c) 2018 Pedro Tobo</Copyright>
+    <PackageId>ya.JsonRPC</PackageId>
+    <PackageTags>JsonRPC Client</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/ptobo/JsonRPC-DotNet/master/logo.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
