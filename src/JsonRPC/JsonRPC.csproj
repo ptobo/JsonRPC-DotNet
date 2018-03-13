@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Pedro Tobo</Authors>
+    <Company />
+    <PackageProjectUrl>https://github.com/ptobo/JsonRPC-DotNet/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ptobo/JsonRPC-DotNet.git</RepositoryUrl>
+    <Description>JsonRPC Class Library for supporting Json-RPC APIs</Description>
+    <PackageLicenseUrl>https://github.com/ptobo/JsonRPC-DotNet/master/LICENSE.md</PackageLicenseUrl>
+    <Copyright>Copyright (c) 2018 Pedro Tobo</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+  </ItemGroup>
+
+</Project>
