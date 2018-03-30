@@ -1,7 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -12,8 +14,9 @@ namespace JsonRPC
         private Uri url;
         private CookieContainer cookies = new CookieContainer();
         private ICredentials credentials = null;
-        private HttpWebRequest request = null;
-        private HttpWebResponse response = null;
+        private HttpClient request;
+        private HttpClientHandler handler;
+        private HttpResponseMessage response;
         public int timeout { set; get; }
         public RequestBuilder jsonRequest { set; get; }
 
@@ -21,19 +24,20 @@ namespace JsonRPC
         {
             try
             {
-                request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.ContentType = "application/json";
-                request.Accept = "application/json";
-                request.Timeout = (timeout == 0) ? 100 * 1000 : timeout * 1000;
-                request.CookieContainer = cookies;
-
                 if (credentials == null)
                 {
                     credentials = CredentialCache.DefaultCredentials;
                 }
 
-                request.Credentials = credentials;
+                handler = new HttpClientHandler();
+                handler.UseCookies = true;
+                handler.CookieContainer = cookies;
+                handler.Credentials = credentials;
+
+                request = new HttpClient(handler);
+                request.BaseAddress = url;
+                request.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                request.Timeout = new TimeSpan((timeout == 0) ? 100 * 1000 : timeout * 1000);
             }
             catch (Exception ex)
             {
@@ -52,7 +56,7 @@ namespace JsonRPC
 
         }
 
-        public String Execute(String method, Object parameters = null)
+        public async Task<string> Execute(String method, Object parameters = null)
         {
             if (jsonRequest == null)
             {
@@ -62,28 +66,19 @@ namespace JsonRPC
             String json = jsonRequest.Build();
             jsonRequest = null;
 
-            initRequest();
-
-            byte[] reqBytes = Encoding.UTF8.GetBytes(json);
-            request.ContentLength = reqBytes.Length;
-
             try
             {
-                using (Stream requestStream = request.GetRequestStream())
+                initRequest();
+
+                response = await request.PostAsync(url.ToString(), new StringContent(json, Encoding.UTF8, "application/json")).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    requestStream.Write(reqBytes, 0, reqBytes.Length);
-                    requestStream.Close();
-                }
+                    cookies = handler.CookieContainer;
+                    string result;
 
-                response = (HttpWebResponse)request.GetResponse();
-                cookies = request.CookieContainer;
-                request = null;
+                    result = await response.Content.ReadAsStringAsync();
 
-                string result;
-
-                using (StreamReader rdr = new StreamReader(response.GetResponseStream()))
-                {
-                    result = rdr.ReadToEnd();
                     JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(result);
                     JToken value;
 
@@ -100,10 +95,14 @@ namespace JsonRPC
                         throw new Exception("Unexpected error: " + result);
                     }
                 }
+                else
+                {
+                    throw new Exception("Unexpected error");
+                }
             }
-            catch (WebException wex)
+            catch (HttpRequestException hre)
             {
-                throw wex;
+                throw hre;
             }
             catch (Exception ex)
             {
