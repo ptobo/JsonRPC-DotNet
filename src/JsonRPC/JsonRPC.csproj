@@ -14,10 +14,10 @@
     <PackageTags>JsonRPC Json-RPC  Client API</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/ptobo/JsonRPC-DotNet/master/logo.png</PackageIconUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
     <PackageReleaseNotes>Add support to multipe frameworks</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
